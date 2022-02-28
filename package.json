@@ -1,0 +1,24 @@
+{
+  "name": "minimal",
+  "version": "0.0.1",
+  "description": "Minimal CxJS Template for CodeSandbox",
+  "main": "app/index.js",
+  "scripts": {
+    "start": "webpack-dev-server --mode development",
+    "dev": "webpack --mode development --progress",
+    "build": "webpack --mode production --progress"
+  },
+  "dependencies": {
+    "casual": "1.5.19",
+    "cx": "18.7.7",
+    "cx-react": "^17.10.0",
+    "react": "16.3.2",
+    "react-dom": "16.3.2",
+    "webpack-dev-server": "^4.7.4"
+  },
+  "keywords": [],
+  "devDependencies": {
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2"
+  }
+}
