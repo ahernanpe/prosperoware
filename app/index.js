@@ -1,4 +1,21 @@
 import {
+  Chart,
+  Column,
+  Gridlines,
+  LineGraph,
+  Marker,
+  PieChart,
+  PieSlice
+} from "cx/charts";
+import {
+  Controller,
+  KeySelection,
+  LabelsLeftLayout,
+  PropertySelection,
+  Repeater
+} from "cx/ui";
+import { Svg, Text } from "cx/svg";
+import {
   Button,
   Checkbox,
   FlexRow,
@@ -12,13 +29,6 @@ import {
   TreeNode,
   ValidationGroup
 } from "cx/widgets";
-import { Text } from "cx/svg";
-import {
-  Controller,
-  KeySelection,
-  LabelsLeftLayout,
-  PropertySelection
-} from "cx/ui";
 
 const array = [
   {
@@ -121,7 +131,7 @@ const array = [
   },
   {
     id: 0,
-    name: "Nasir Brown",
+    name: "compilation.r",
     size: 365597,
     city: "Sauerhaven",
     date_modified: "Jun 14 2021",
@@ -135,8 +145,47 @@ class PageController extends Controller {
   init() {
     super.init();
     this.idSeq = 0;
-    console.log(this.generateRecords());
+    console.log(this.generateRec());
     this.store.set("data", array);
+    this.store.set("data1", array);
+    this.store.set("bars", [
+      {
+        day: "Mo",
+        value: 500,
+        colorIndex: 12
+      },
+      {
+        day: "Tu",
+        value: 900,
+        colorIndex: 9
+      },
+      {
+        day: "We",
+        value: 850,
+        colorIndex: 10
+      },
+      {
+        day: "Th",
+        value: 950,
+        colorIndex: 9
+      },
+      {
+        day: "Fr",
+        value: 1000,
+        colorIndex: 8
+      }
+    ]);
+    console.log("generando...");
+    const a = Array.from({ length: 5 }).map((x, i) => ({
+      text: `${i + 1}`
+    }));
+    console.log(a);
+    this.store.init(
+      "$page.records",
+      Array.from({ length: 5 }).map((x, i) => ({
+        text: `${i + 1}`
+      }))
+    );
   }
 
   generateRecords(node) {
@@ -149,6 +198,10 @@ class PageController extends Controller {
         type: "pdf",
         $leaf: true
       }));
+  }
+  generateRec() {
+    console.log("page.records");
+    return "$page.records";
   }
 }
 
@@ -199,55 +252,24 @@ export const App = (
         </td>
         <td class="second">
           <div>
-            <Section>
-              <Grid
-                records:bind="data"
-                mod="big"
-                style={{ width: "100%" }}
-                dataAdapter={{
-                  type: TreeAdapter,
-                  load: (context, { controller }, node) =>
-                    controller.generateRecors(node)
-                }}
-                selection={{ type: KeySelection, bind: "$page.selection" }}
-                columns={[
-                  {
-                    field: "name",
-                    sortable: true,
-                    items: (
-                      <cx>
-                        <TreeNode
-                          expanded:bind="$record.$expanded"
-                          leaf:bind="$record.$leaf"
-                          level:bind="$record.$level"
-                          loading:bind="$record.$loading"
-                          text:bind="$record.name"
-                        />
-                      </cx>
-                    )
-                  },
-                  { header: "Size", field: "size" },
-                  { header: "Date", field: "date_modified", sortable: true },
-                  { header: "Type", field: "type", sortable: true }
-                ]}
-              />
+            <div>
               <List
-                records-bind="$page.record"
-                selection={PropertySelection}
-                style="width:200px"
-                emptyText="No results found."
-                mod="bordered"
-                onItemDoubleClick={(e, { store }) => {
-                  MsgBox.alert(store.get("$record.text"));
+                records:bind="data"
+                selection={{
+                  type: KeySelection,
+                  bind: "$record.documents"
                 }}
               >
-                <div>
-                  <strong>
-                    Header <Text expr="{$index}+1" />
-                  </strong>
-                </div>
-                Description
+                Name: <span text:bind="$record.name" />
+                <br />
+                <strong text:bind="$record.name" />
+                <br />
+                Size: <span text:bind="$record.size" />
+                <br />
+                Date: <span text:bind="$record.date_modified" />
               </List>
+            </div>
+            <Section>
               <FlexRow putInto="footer">
                 <Button mod="hollow" icon="file" />
                 <Button mod="hollow" icon="calculator" />
