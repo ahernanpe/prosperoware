@@ -6,12 +6,21 @@ td {
   vertical-align: top;
   width: 50%;
   
+  
 }
 
 td.first {
   border-right: 5px solid #4BB495  ;
   border-left: 5px solid #4BB495  ;
   border-top: 5px solid #4BB495  ;
+  border-bottom: 5px solid #4BB495 ;
+}
+
+td.second {
+  border-right: 5px solid #4BB495  ;
+  border-left: 5px solid #4BB495  ;
+  border-top: 5px solid #4BB495  ;
+  border-bottom: 5px solid #4BB495 ;
 }
 
 big {
