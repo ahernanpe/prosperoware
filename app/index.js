@@ -130,14 +130,31 @@ const array = [
     ]
   },
   {
-    id: 0,
+    name: "GraphQL",
+    $level: 0,
+    id: "2609839234950",
+    documents: [
+      {
+        id: "2609839234955",
+        name: "Introduction.pdf",
+        size: 156664555,
+        date_modified:
+          "Mon Jun 14 2021 13:34:55 GMT+0200 (Central European Summer Time)",
+        type: "pdf",
+        $leaf: true,
+        $level: 1
+      }
+    ]
+  },
+  {
+    id: 2609839234990,
     name: "compilation.r",
     size: 365597,
     city: "Sauerhaven",
     date_modified: "Jun 14 2021",
     type: "pdf",
     $leaf: true,
-    $level: 1
+    $level: 0
   }
 ];
 
@@ -145,41 +162,12 @@ class PageController extends Controller {
   init() {
     super.init();
     this.idSeq = 0;
-    console.log(this.generateRec());
+    console.log("array", this.generateRec());
     this.store.set("data", array);
     this.store.set("data1", array);
-    this.store.set("bars", [
-      {
-        day: "Mo",
-        value: 500,
-        colorIndex: 12
-      },
-      {
-        day: "Tu",
-        value: 900,
-        colorIndex: 9
-      },
-      {
-        day: "We",
-        value: 850,
-        colorIndex: 10
-      },
-      {
-        day: "Th",
-        value: 950,
-        colorIndex: 9
-      },
-      {
-        day: "Fr",
-        value: 1000,
-        colorIndex: 8
-      }
-    ]);
+    this.store.set("bars", this.generateRecords());
     console.log("generando...");
-    const a = Array.from({ length: 5 }).map((x, i) => ({
-      text: `${i + 1}`
-    }));
-    console.log(a);
+
     this.store.init(
       "$page.records",
       Array.from({ length: 5 }).map((x, i) => ({
@@ -189,15 +177,23 @@ class PageController extends Controller {
   }
 
   generateRecords(node) {
-    if (!node)
-      return Array.from({ length: 2 }).map(() => ({
+    if (!node || node.$level < 5) {
+      return Array.from({ length: 3 }).map(() => ({
         id: ++this.idSeq,
-        name: "Name",
-        size: 1000,
-        date_modified: "",
+        name: "archivo",
+        size: "12122",
+        date_modified:
+          "Mon Jun 14 2021 13:34:55 GMT+0200 (Central European Summer Time)",
         type: "pdf",
         $leaf: true
       }));
+    }
+  }
+
+  generteFiles(node) {
+    return Array.from({ length: 5 }).map((x, i) => ({
+      text: `${i + 1}`
+    }));
   }
   generateRec() {
     console.log("page.records");
@@ -228,10 +224,14 @@ export const App = (
                 load: (context, { controller }, node) =>
                   controller.generateRecords(node)
               }}
-              selection={{ type: KeySelection, bind: "$page.selection" }}
+              selection={{
+                type: KeySelection,
+                bind: "$page.selection",
+                multiple: true
+              }}
               columns={[
                 {
-                  header: "Folder",
+                  header: "Folders",
                   field: "name",
                   sortable: true,
                   items: (
@@ -252,13 +252,13 @@ export const App = (
         </td>
         <td class="second">
           <div>
-            <div>
+            <div controller={PageController}>
               <List
-                records:bind="data"
-                selection={{
-                  type: KeySelection,
-                  bind: "$record.documents"
-                }}
+                records:bind="bars"
+                selection={{ type: KeySelection, bind: "selectedType" }}
+                style="widt+h:200px"
+                emptyText="Nothing found."
+                mod="bordered"
               >
                 Name: <span text:bind="$record.name" />
                 <br />
@@ -269,6 +269,15 @@ export const App = (
                 Date: <span text:bind="$record.date_modified" />
               </List>
             </div>
+            <Repeater records:bind="$page.records">
+              <div>
+                <Checkbox
+                  checked:bind="$record.selected"
+                  text:bind="$record.name"
+                />
+              </div>
+            </Repeater>
+
             <Section>
               <FlexRow putInto="footer">
                 <Button mod="hollow" icon="file" />
