@@ -177,13 +177,13 @@ class PageController extends Controller {
   }
 
   generateRecords(node) {
+    console.log("activado");
     if (!node || node.$level < 5) {
-      return Array.from({ length: 3 }).map(() => ({
+      return array.map(array => ({
         id: ++this.idSeq,
-        name: "archivo",
-        size: "12122",
-        date_modified:
-          "Mon Jun 14 2021 13:34:55 GMT+0200 (Central European Summer Time)",
+        name: array.name,
+        size: "55454",
+        date_modified: "jun-2022",
         type: "pdf",
         $leaf: true
       }));
