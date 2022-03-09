@@ -176,17 +176,34 @@ class PageController extends Controller {
     );
   }
 
+  generateRecords2(node) {
+    console.log("activado");
+    let id = id;
+    if (!node || node.$level < 5) {
+      return array
+        .filter(x => x.id === "2609839234950")
+        .map(doc => doc.documents.map(sub => sub.name));
+    }
+  }
+
   generateRecords(node) {
     console.log("activado");
+
     if (!node || node.$level < 5) {
-      return array.map(array => ({
-        id: ++this.idSeq,
-        name: array.name,
-        size: "55454",
-        date_modified: "jun-2022",
-        type: "pdf",
-        $leaf: true
-      }));
+      let id = this.idSeq;
+      console.log(id);
+
+      var b = array.filter(x => x.id === "2609839234950").map(doc =>
+        doc.documents.map(sub => ({
+          name: sub.name,
+          size: sub.size,
+          date_modified: sub.date_modified,
+          type: sub.type,
+          $leaf: sub.$leaf
+        }))
+      );
+
+      return b.reduce((a, b) => [...a, ...b], []);
     }
   }
 
